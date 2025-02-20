@@ -20,7 +20,6 @@ def calculate_statistics(prices):
     return max_price, avg_price, min_price
 
 def clean_price(price):
-    # Use regular expression to extract only the numeric part of the price
     numeric_price = re.sub(r'\D', '', price)
     return int(numeric_price) if numeric_price else 0
 
