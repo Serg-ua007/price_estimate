@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="sticky-search">
+            <form method="POST" action="/" onsubmit="showSpinner()">
+                <input type="text" name="query" placeholder="Enter search query">
+                <button type="submit">Search</button>
+            </form>
+            <div class="spinner" id="spinner"></div>
+        </div>
+
+        <div class="statistics">
+            <h1>Searched Query: {{ query }}</h1>
+            <p><small>Number of Results: OLX: {{ olx_count }}, Shafa: {{ shafa_count }}</small></p>
+            <h2>Prices</h2>
+            <div class="price-badge price-max">Max: {{ max_price }} грн</div>
+            <div class="price-badge price-avg">Average: {{ avg_price }} грн</div>
+            <div class="price-badge price-min">Min: {{ min_price }} грн</div>
+        </div>
+
+        <h2>Listings</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Source</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in olx_items %}
+                <tr>
+                    <td><img src="{{ item.image }}" alt="{{ item.title }}" class="result-image"></td>
+                    <td><a href="{{ item.link }}" target="_blank">{{ item.title }}</a></td>
+                    <td>OLX</td>
+                    <td>{{ item.price }}</td>
+                </tr>
+                {% endfor %}
+                {% for item in shafa_items %}
+                <tr>
+                    <td><img src="{{ item.image }}" alt="{{ item.title }}" class="result-image"></td>
+                    <td><a href="{{ item.link }}" target="_blank">{{ item.title }}</a></td>
+                    <td>Shafa</td>
+                    <td>{{ item.price }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block';
+        }
+    </script>
+</body>
+</html>

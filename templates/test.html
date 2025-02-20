@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Test Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        /* Base Styles */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Sticky Search */
+        .sticky-search {
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            padding: 15px;
+            z-index: 1000;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .sticky-search input[type="text"] {
+            padding: 10px;
+            width: 100%;
+            max-width: 350px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .sticky-search button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .sticky-search button:hover {
+            background-color: #2980b9;
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 15px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Statistics */
+        .statistics {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .statistics h1 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .price-badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .price-badge {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .price-max { background-color: #e74c3c; }
+        .price-avg { background-color: #3498db; }
+        .price-min { background-color: #2ecc71; }
+
+        /* Listings Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 25px;
+        }
+
+        .results-table th, .results-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .results-table th {
+            background-color: #f9f9f9;
+            font-weight: 700;
+        }
+
+        .results-table td a {
+            color: #3498db;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .results-table td a:hover {
+            text-decoration: underline;
+        }
+
+        .result-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 20px;
+            margin-top: 20px;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #3498db;
+            width: 0;
+            transition: width 0.6s ease;
+        }
+
+        .progress::after {
+            content: attr(data-progress) '%';
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #fff;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        @media (max-width: 600px) {
+            .sticky-search input[type="text"] {
+                width: 100%;
+            }
+
+            .price-badges {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .results-table th, .results-table td {
+                font-size: 0.9rem;
+            }
+
+            .result-image {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sticky Search -->
+        <div class="sticky-search">
+            <form method="POST" action="/" onsubmit="showSpinner()">
+                <input type="text" name="query" placeholder="Enter search query">
+                <button type="submit">Search</button>
+            </form>
+            <div class="spinner" id="spinner"></div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="statistics">
+            <h1>Example Query: <em>“Zara”</em></h1>
+            <p><small>Results: OLX: 10 | Shafa: 5</small></p>
+            <h2>Prices</h2>
+            <div class="price-badges">
+                <div class="price-badge price-max">Max: 1000 грн</div>
+                <div class="price-badge price-avg">Average: 500 грн</div>
+                <div class="price-badge price-min">Min: 100 грн</div>
+            </div>
+        </div>
+
+        <!-- Listings Table -->
+        <h2>Listings</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Title</th>
+                    <th>Source</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="https://via.placeholder.com/100" alt="Example Item 1" class="result-image"></td>
+                    <td><a href="#" target="_blank">Example Item 1</a></td>
+                    <td>OLX</td>
+                    <td>500 грн</td>
+                </tr>
+                <tr>
+                    <td><img src="https://via.placeholder.com/100" alt="Example Item 2" class="result-image"></td>
+                    <td><a href="#" target="_blank">Example Item 2</a></td>
+                    <td>Shafa</td>
+                    <td>300 грн</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Progress Bar -->
+        <h2>Progress Bar</h2>
+        <div class="progress-bar">
+            <div class="progress" style="width: 70%;" data-progress="70"></div>
+        </div>
+    </div>
+
+    <script>
+        function showSpinner() {
+            document.getElementById('spinner').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
